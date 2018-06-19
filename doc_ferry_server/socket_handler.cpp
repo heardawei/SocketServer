@@ -23,10 +23,6 @@ static ss_map_t g_handlers;
 
 void BaseSocket::add_channel(ss_map_t *p_handlers)
 {
-	if (p_handlers == nullptr)
-	{
-		p_handlers = &g_handlers;
-	}
 	delete (*p_handlers)[this->sock];
 	p_handlers->erase(this->sock);
 	(*p_handlers)[this->sock] = this;
@@ -36,11 +32,6 @@ void BaseSocket::add_channel(ss_map_t *p_handlers)
 
 void BaseSocket::del_channel(ss_map_t *p_handlers)
 {
-	if (p_handlers == nullptr)
-	{
-		p_handlers = &g_handlers;
-	}
-
 	ss_map_t::iterator itr = p_handlers->find(this->sock);
 	if (itr != p_handlers->end())
 	{
@@ -68,7 +59,7 @@ int BaseSocket::create_socket(int af, int type)
 	if (cp_socket_valid(this->sock))
 	{
 		cp_setblocking(this->sock, false);
-		this->set_socket(this->sock);
+		this->set_socket(this->sock, this->p_handlers);
 		debug_print("%s success, create socket:%d\n", __func__, (int)this->sock);
 		return 0;
 	}
@@ -93,13 +84,12 @@ void BaseSocket::set_reuse_addr()
 }
 
 BaseSocket::BaseSocket(cp_socket_t sock, ss_map_t *p_handlers) :
-	sock(sock), connected(false), connecting(false), accepting(false), closing(false), debug(true)
+	sock(sock), p_handlers(p_handlers), connected(false), connecting(false), accepting(false), closing(false), debug(true)
 {
-	if (p_handlers == nullptr)
+	if (this->p_handlers == nullptr)
 	{
-		p_handlers = &g_handlers;
+		this->p_handlers = &g_handlers;
 	}
-	this->p_handlers = p_handlers;
 	if (cp_socket_valid(sock))
 	{
 		cp_setblocking(sock, false);
@@ -132,7 +122,7 @@ BaseSocket::BaseSocket(cp_socket_t sock, ss_map_t *p_handlers) :
 #endif /* CP_WINDOWS/CP_LINUX */
 			else
 			{
-				this->del_channel(p_handlers);
+				this->del_channel(this->p_handlers);
 				// TODO: raise
 			}
 		}
@@ -320,7 +310,7 @@ void BaseSocket::close()
 	this->connected = false;
 	this->connecting = false;
 	this->accepting = false;
-	this->del_channel();
+	this->del_channel(this->p_handlers);
 	cp_close_socket(this->sock);
 }
 
@@ -442,22 +432,18 @@ void BaseSocket::handle_close()
 }
 
 
-/* ------------------------------------ SocketServerImpl ------------------------------------ */
+/* ------------------------------------ TCPServerImpl ------------------------------------ */
 
-SocketServerImpl::SocketServerImpl(const char *host, uint16_t port, ss_map_t *p_handlers) :
+TCPServerImpl::TCPServerImpl(const char *host, uint16_t port, ss_map_t *p_handlers) :
 	BaseSocket(INVALID_SOCKET, p_handlers)
 {
 	this->create_socket(AF_INET, SOCK_STREAM);
 	this->set_reuse_addr();
-	if (host == nullptr)
-	{
-		host = "";
-	}
 	this->bind(ss_addr_t (std::string(host), port));
 	this->listen(5);
 }
 
-void SocketServerImpl::handle_accept()
+void TCPServerImpl::handle_accept()
 {
 	ss_addr_t addr;
 	cp_socket_t sock = this->accept(&addr);
@@ -479,26 +465,27 @@ void SocketServerImpl::handle_accept()
 	}
 }
 
-
-SocketServer::SocketServer(const char *host, uint16_t port, ss_map_t *p_handlers) :
-	p_impl(new SocketServerImpl(host, port, p_handlers)), p_handlers(p_handlers)
+TCPServer::TCPServer(const char *host, uint16_t port, ss_map_t *p_handlers) :
+	p_handlers(p_handlers)
 {
-	if (p_impl)
+	if (this->p_handlers == nullptr)
 	{
-		p_impl_sock = p_impl->socket();
+		this->p_handlers = &g_handlers;
 	}
-	if (p_handlers == nullptr)
+	if (host == nullptr)
 	{
-		p_handlers = &g_handlers;
+		host = "";
+	}
+	this->p_impl = new TCPServerImpl(host, port, this->p_handlers);
+	if (this->p_impl)
+	{
+		p_impl_sock = this->p_impl->socket();
 	}
 }
 
-SocketServer::~SocketServer()
+TCPServer::~TCPServer()
 {
-	if (p_handlers)
-	{
-		p_handlers->erase(p_impl_sock);
-	}
+	p_handlers->erase(p_impl_sock);
 }
 
 
@@ -574,7 +561,7 @@ void SocketHandler::handle_close()
 
 /* ------------------------------------ MainProcess ------------------------------------ */
 
-static void do_select(int timeout_ms = 10000, ss_map_t *p_handlers = nullptr)
+static void do_select(int timeout_ms, ss_map_t *p_handlers)
 {
 	fd_set r, w, e;
 	std::vector<cp_socket_t> select_socks;
@@ -588,10 +575,6 @@ static void do_select(int timeout_ms = 10000, ss_map_t *p_handlers = nullptr)
 	if (p_handlers->size() == 0)
 	{
 		return;
-	}
-	if (p_handlers == nullptr)
-	{
-		p_handlers = &g_handlers;
 	}
 
 	/* init select arguments */
@@ -736,7 +719,18 @@ void loop(int timeout_ms, size_t count, ss_map_t *p_handlers)
 
 	if (p_handlers == nullptr)
 	{
+		debug_print("use global default map\n");
 		p_handlers = &g_handlers;
+	}
+	else
+	{
+		debug_print("use specific map\n");
+	}
+
+	if (p_handlers->size() == 0)
+	{
+		debug_print("fatal error, specific map is empty, instance a server at first!");
+		return;
 	}
 
 	if (count == 0)
@@ -750,6 +744,7 @@ void loop(int timeout_ms, size_t count, ss_map_t *p_handlers)
 	{
 		for (size_t i = 0; i < count && p_handlers->size(); i++)
 		{
+			debug_print("loop %d/%d times\n", i, count);
 			do_select(timeout_ms, p_handlers);
 		}
 		debug_print("after loop %d times, stop loop\n", (int)count);

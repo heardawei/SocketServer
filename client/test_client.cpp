@@ -51,8 +51,16 @@ int main()
 		printf("client connect to %s:%d success\n", srv_host, srv_port);
 
 		string send_buff("sssssssssss");
-//		printf("input: \n");
-//		cin >> send_buff;
+		printf("input (use `quit` to quit..): \n");
+		cin >> send_buff;
+
+		if (send_buff.compare(0, 4, "quit") == 0)
+		{
+			printf("quit this conversation..\n");
+			closesocket(sclient);
+			goto main_end;
+		}
+
 		send(sclient, send_buff.data(), (int)send_buff.size(), 0);
 		printf("send: [%s]\n", send_buff.data());
 

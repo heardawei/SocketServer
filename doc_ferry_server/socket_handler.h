@@ -80,21 +80,27 @@ protected:
  * instance a server
  * 
  */
-class SocketServerImpl : public BaseSocket
+class TCPServerImpl : public BaseSocket
 {
 public:
-	SocketServerImpl(const char *host, uint16_t port, ss_map_t *p_handlers = nullptr);
+	/* 
+	 * p_handlers	:
+	 * host			: if you do not know how to fill, just nullptr
+	 *
+	 * port			: must specific a port to listen
+	 */
+	TCPServerImpl(const char *host, uint16_t port, ss_map_t *p_handlers);
 	virtual void handle_accept();
 };
 
-class SocketServer
+class TCPServer
 {
 public:
-	SocketServer(const char *host, uint16_t port, ss_map_t *p_handlers = nullptr);
-	~SocketServer();
+	TCPServer(const char *host, uint16_t port, ss_map_t *p_handlers = nullptr);
+	~TCPServer();
 private:
 	cp_socket_t p_impl_sock;
-	SocketServerImpl *p_impl;
+	TCPServerImpl *p_impl;
 	ss_map_t *p_handlers;
 };
 

@@ -10,8 +10,9 @@
 
 int main(void)
 {
-	SocketServer srv(NULL, 7890, NULL);
-	loop(1000, 30);
+	std::map<cp_socket_t, BaseSocket *> sock_handlers;
+	TCPServer srv(NULL, 7890, &sock_handlers);
+	loop(60000, 0, &sock_handlers);
 
 	getchar();
 	return 0;
