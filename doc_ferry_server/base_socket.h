@@ -3,6 +3,7 @@
 #include <map>
 #include <string>
 #include <inttypes.h>
+#include <memory>
 
 #include "cp_socket.h"
 
@@ -13,7 +14,8 @@
 
 class BaseSocket;
 using ss_addr_t = std::pair<std::string, uint16_t>;
-using ss_map_t = std::map<cp_socket_t, std::shared_ptr<BaseSocket>>;
+using auto_BaseSocket_t = std::shared_ptr<BaseSocket>;
+using ss_map_t = std::map<cp_socket_t, auto_BaseSocket_t>;
 
 /*
 * Basic Socket Handler
@@ -23,9 +25,18 @@ class BaseSocket
 {
 public:
 	BaseSocket(cp_socket_t sock = INVALID_SOCKET, ss_map_t *p_handlers = nullptr);
+
 	cp_socket_t socket();
 	ss_addr_t address();
 	bool is_accepting();
+
+	void handle_read_event();
+	void handle_write_event();
+	void handle_connect_event();
+	void handle_expt_event();
+
+	virtual bool readable();
+	virtual bool writable();
 
 	void add_channel(ss_map_t *p_handlers = nullptr);
 	void del_channel(ss_map_t *p_handlers = nullptr);
@@ -43,12 +54,6 @@ public:
 	void log_warning(std::string msg);
 	void log_info(std::string msg);
 
-	void handle_read_event();
-	void handle_write_event();
-	void handle_connect_event();
-	void handle_expt_event();
-
-
 	virtual void handle_error();
 	virtual void handle_expt();
 	virtual void handle_read();
@@ -56,9 +61,6 @@ public:
 	virtual void handle_connect();
 	virtual void handle_accept();
 	virtual void handle_close();
-
-	virtual bool readable();
-	virtual bool writable();
 
 	virtual ~BaseSocket();
 

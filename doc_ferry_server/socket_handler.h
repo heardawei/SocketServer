@@ -1,4 +1,5 @@
 #pragma once
+
 #include "base_socket.h"
 
 /*
@@ -9,12 +10,15 @@ class SocketHandler : public BaseSocket
 {
 public:
 	SocketHandler(cp_socket_t sock = INVALID_SOCKET, ss_map_t *p_handlers = nullptr);
+
+	virtual bool readable();
+	virtual bool writable();
+
+protected:
 	~SocketHandler();
 	virtual void handle_expt();
 	virtual void handle_read();
 	virtual void handle_write();
 	virtual void handle_close();
 
-	virtual bool readable();
-	virtual bool writable();
 };

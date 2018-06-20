@@ -25,7 +25,10 @@ ss_map_t g_handlers;
 void BaseSocket::add_channel(ss_map_t *p_handlers)
 {
 	p_handlers->erase(this->sock);
-	(*p_handlers)[this->sock] = std::shared_ptr<BaseSocket> (this);
+	auto_BaseSocket_t ptr(this);
+	std::pair<cp_socket_t, auto_BaseSocket_t> pair(this->sock, ptr);
+	p_handlers->insert(pair);
+//	(*p_handlers)[this->sock] = std::shared_ptr<BaseSocket> (this);
 	debug_print("add_channel socket:%d\n", (int)this->sock);
 }
 

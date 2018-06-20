@@ -24,7 +24,7 @@ class TCPServer
 public:
 	TCPServer(const char *host, uint16_t port, ss_map_t *p_handlers = nullptr);
 	~TCPServer();
-private:
+protected:
 	cp_socket_t p_impl_sock;
 	TCPServerImpl *p_impl;
 	ss_map_t *p_handlers;

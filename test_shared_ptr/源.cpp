@@ -17,6 +17,10 @@ class B : public A
 public:
 	B() : A() { std::cout << "B" << std::endl; }
 	B(int b) : A(b) { std::cout << "B(" << b << ")" << std::endl; }
+	void assign()
+	{
+		std::shared_ptr<B> ptr(this);
+	}
 };
 
 int main(void)

@@ -15,17 +15,6 @@ typedef struct
 	data_len_t	length;
 }Header;
 
-typedef struct
-{
-	Header	header;
-	std::shared_ptr<void> data;
-}Request;
-
-typedef struct
-{
-	Header	header;
-	int	errcode;
-}Response;
 #pragma pack(pop)
 
 

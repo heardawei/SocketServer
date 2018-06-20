@@ -33,7 +33,13 @@
     <ClCompile Include="base_socket.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="business.cpp">
+    <ClCompile Include="virus_handler.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="virus_check.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="header_value.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -56,7 +62,13 @@
     <ClInclude Include="base_socket.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="business.h">
+    <ClInclude Include="virus_handler.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="virus_check.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="header_value.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

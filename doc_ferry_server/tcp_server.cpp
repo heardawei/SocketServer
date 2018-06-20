@@ -1,6 +1,6 @@
 #include "debug_print.h"
 #include "tcp_server.h"
-#include "socket_handler.h"
+#include "virus_handler.h"
 
 TCPServerImpl::TCPServerImpl(const char *host, uint16_t port, ss_map_t *p_handlers) :
 	BaseSocket(INVALID_SOCKET, p_handlers)
@@ -20,7 +20,7 @@ void TCPServerImpl::handle_accept()
 		// TODO, support multi-thread/multi-process
 
 		// this pointer(SocketHandler *) will insert self into this->p_handlers;
-		new SocketHandler (sock, this->p_handlers);
+		new VirusHandler (sock, this->p_handlers);
 		debug_print("accept a new client, sock: %d\n", sock);
 	}
 	else

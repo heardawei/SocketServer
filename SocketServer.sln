@@ -21,6 +21,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_inherit", "test_inheri
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_shared_ptr", "test_shared_ptr\test_shared_ptr.vcxproj", "{8088A806-51E9-4367-B754-F15644F61392}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_array", "test_array\test_array.vcxproj", "{67AEC99F-AD5D-4745-86EF-026A1D9F31CE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -101,6 +103,14 @@ Global
 		{8088A806-51E9-4367-B754-F15644F61392}.Release|x64.Build.0 = Release|x64
 		{8088A806-51E9-4367-B754-F15644F61392}.Release|x86.ActiveCfg = Release|Win32
 		{8088A806-51E9-4367-B754-F15644F61392}.Release|x86.Build.0 = Release|Win32
+		{67AEC99F-AD5D-4745-86EF-026A1D9F31CE}.Debug|x64.ActiveCfg = Debug|x64
+		{67AEC99F-AD5D-4745-86EF-026A1D9F31CE}.Debug|x64.Build.0 = Debug|x64
+		{67AEC99F-AD5D-4745-86EF-026A1D9F31CE}.Debug|x86.ActiveCfg = Debug|Win32
+		{67AEC99F-AD5D-4745-86EF-026A1D9F31CE}.Debug|x86.Build.0 = Debug|Win32
+		{67AEC99F-AD5D-4745-86EF-026A1D9F31CE}.Release|x64.ActiveCfg = Release|x64
+		{67AEC99F-AD5D-4745-86EF-026A1D9F31CE}.Release|x64.Build.0 = Release|x64
+		{67AEC99F-AD5D-4745-86EF-026A1D9F31CE}.Release|x86.ActiveCfg = Release|Win32
+		{67AEC99F-AD5D-4745-86EF-026A1D9F31CE}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
