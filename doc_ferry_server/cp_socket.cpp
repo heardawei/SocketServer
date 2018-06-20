@@ -273,14 +273,14 @@ int cp_send(cp_socket_t sock, const char *buf, int len, int flags)
 	return (int)send(sock, buf, len, flags);
 }
 
-int cp_recv(cp_socket_t sock, char *buf, int len, int flags)
+int cp_recv(cp_socket_t sock, void *buf, size_t len, int flags)
 {
 	if (buf == NULL || len < 1)
 	{
 		return 0;
 	}
 
-	return (int)recv(sock, buf, len, flags);
+	return (int)recv(sock, (char *)buf, (int)len, flags);
 }
 
 int cp_send_all(cp_socket_t sock, const char *buf, int len, int flags)

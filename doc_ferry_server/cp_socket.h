@@ -47,7 +47,7 @@ int cp_connect(cp_socket_t sock, int af, const char *p_srv_host, uint16_t srv_po
 int cp_listen(cp_socket_t sock, int maxconn);
 cp_socket_t cp_accept(cp_socket_t sock, struct sockaddr_in *p_addr);
 int cp_send(cp_socket_t sock, const char *buf, int len, int flags = 0);
-int cp_recv(cp_socket_t sock, char *buf, int len, int flags = 0);
+int cp_recv(cp_socket_t sock, void *buf, size_t len, int flags = 0);
 int cp_send_all(cp_socket_t sock, const char *buf, int len, int flags = 0);
 int cp_setblocking(cp_socket_t sock, bool is_block);
 void cp_close_socket(cp_socket_t sock);

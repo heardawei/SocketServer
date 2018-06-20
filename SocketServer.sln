@@ -19,6 +19,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_string", "test_string\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_inherit", "test_inherit\test_inherit.vcxproj", "{14D4FDFA-BC7D-4A63-B392-F5B8D5AB5EC0}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_shared_ptr", "test_shared_ptr\test_shared_ptr.vcxproj", "{8088A806-51E9-4367-B754-F15644F61392}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -91,6 +93,14 @@ Global
 		{14D4FDFA-BC7D-4A63-B392-F5B8D5AB5EC0}.Release|x64.Build.0 = Release|x64
 		{14D4FDFA-BC7D-4A63-B392-F5B8D5AB5EC0}.Release|x86.ActiveCfg = Release|Win32
 		{14D4FDFA-BC7D-4A63-B392-F5B8D5AB5EC0}.Release|x86.Build.0 = Release|Win32
+		{8088A806-51E9-4367-B754-F15644F61392}.Debug|x64.ActiveCfg = Debug|x64
+		{8088A806-51E9-4367-B754-F15644F61392}.Debug|x64.Build.0 = Debug|x64
+		{8088A806-51E9-4367-B754-F15644F61392}.Debug|x86.ActiveCfg = Debug|Win32
+		{8088A806-51E9-4367-B754-F15644F61392}.Debug|x86.Build.0 = Debug|Win32
+		{8088A806-51E9-4367-B754-F15644F61392}.Release|x64.ActiveCfg = Release|x64
+		{8088A806-51E9-4367-B754-F15644F61392}.Release|x64.Build.0 = Release|x64
+		{8088A806-51E9-4367-B754-F15644F61392}.Release|x86.ActiveCfg = Release|Win32
+		{8088A806-51E9-4367-B754-F15644F61392}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

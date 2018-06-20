@@ -5,12 +5,13 @@
 #include <string>
 
 #include "debug_print.h"
-#include "cp_socket.h"
-#include "socket_handler.h"
+#include "tcp_server.h"
+#include "interface.h"
 
 int main(void)
 {
-	std::map<cp_socket_t, BaseSocket *> sock_handlers;
+	debug_print("interface header size:%u\n", (unsigned)sizeof(iface::Header));
+	std::map<cp_socket_t, std::shared_ptr<BaseSocket>> sock_handlers;
 	TCPServer srv(NULL, 7890, &sock_handlers);
 	loop(60000, 0, &sock_handlers);
 

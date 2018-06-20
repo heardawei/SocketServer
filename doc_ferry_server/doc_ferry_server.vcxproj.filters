@@ -27,6 +27,15 @@
     <ClCompile Include="socket_handler.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="tcp_server.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="base_socket.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="business.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cp_socket.h">
@@ -36,6 +45,18 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="socket_handler.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tcp_server.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="interface.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="base_socket.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="business.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
