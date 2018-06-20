@@ -205,6 +205,9 @@ int fake_client_send_file(int argc, const char **argv)
 	}
 	printf("send %dB \n", n_send);
 
+	// wait peer response
+	Sleep(100);
+
 	// recv response
 	n_recv = recv(sclient, (char *)&resp, sizeof(resp), 0);
 	if (n_recv == SOCKET_ERROR)

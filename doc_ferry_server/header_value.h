@@ -26,6 +26,8 @@ namespace vc
 
 }
 
-bool HV_full(vc::Request *req);
+bool HV_is_value_complete(vc::Request *req);
+bool HV_is_head_complete(vc::Request *req);
+bool HV_is_complete(vc::Request *req);
 int HV_write_memory(vc::Request *req, const char *p_data, int data_len);
 int HV_set(vc::Response *resp, iface::Header *header, char *value);

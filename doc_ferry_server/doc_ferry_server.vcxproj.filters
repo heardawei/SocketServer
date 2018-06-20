@@ -18,9 +18,6 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="protocol.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="cp_socket.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -40,6 +37,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="header_value.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cache_part.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -69,6 +69,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="header_value.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="cache_part.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

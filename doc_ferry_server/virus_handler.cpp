@@ -58,11 +58,6 @@ void VirusHandler::handle_read()
 		cp_send(this->sock, (char *)&rsp.errcode, (int)sizeof(rsp.errcode), 0);
 		debug_print("send to   [%s:%d] [%dB]\n", this->addr.first.data(), this->addr.second, n_send);
 	}
-	//	iface::Response resp;
-	//	resp.header.id = htonl(1);
-	//	resp.header.length = htonl(sizeof(int));
-	//	resp.errcode = htonl(0);
-	//	cp_send(this->sock, (char *)&resp, sizeof(resp), 0);
 
 	return;
 }

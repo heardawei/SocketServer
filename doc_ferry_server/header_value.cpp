@@ -3,13 +3,32 @@
 #include "cp_socket.h" // htonl
 
 
-bool HV_full(vc::Request *req)
+
+bool HV_is_head_complete(vc::Request *req)
 {
 	if (req == nullptr)
 	{
 		return false;
 	}
-	return (req->hlen == (int)sizeof(req->header)) && (req->data_capacity == req->data_size);
+	return req->data_capacity == req->data_size;
+}
+
+bool HV_is_value_complete(vc::Request *req)
+{
+	if (req == nullptr)
+	{
+		return false;
+	}
+	return req->hlen == (int)sizeof(req->header);
+}
+
+bool HV_is_complete(vc::Request *req)
+{
+	if (req == nullptr)
+	{
+		return false;
+	}
+	return HV_is_head_complete(req) && HV_is_value_complete(req);
 }
 
 static int HV_write_head(vc::Request *req, const char *p_data, int data_len)
@@ -74,7 +93,7 @@ static int HV_write_value(vc::Request *req, const char *p_data, int data_len)
 	return (int)wlen;
 }
 
-void HV_head_complete(vc::Request *req)
+static void HV_head_complete(vc::Request *req)
 {
 	if (req->head_complete == false)
 	{
@@ -84,7 +103,7 @@ void HV_head_complete(vc::Request *req)
 	}
 }
 
-void HV_value_complete(vc::Request *req)
+static void HV_value_complete(vc::Request *req)
 {
 
 }
