@@ -11,13 +11,20 @@
 #define MAX_PATH 1024
 #endif
 
+enum storage_to {
+	TO_AUTO = 0,
+	TO_MEM,
+	TO_SHM,
+	TO_FILE
+};
+
 typedef struct private_cache private_cache_t;
 
 typedef struct 
 {
     uint64_t    cache_len;
     char        path[MAX_PATH];
-    
+	char		*buf;
     private_cache_t *p_priv;
 
 }cache_t;
@@ -25,7 +32,7 @@ typedef struct
 /* note:
  * "cache_buf" minimum limit is MEMORY_CACHE_LEN bytes
  * if "cache_dir" is NULL cache_file in current directory */
-cache_t *create_cache(char *cache_buf, const char *cache_dir, uint64_t packet_len);
+cache_t *create_cache(const char *cache_dir, uint64_t capacity, storage_to to);
 
 /* return:  finish 0    unfinished 1    fail -1 */
 int cache_recv_data(cache_t *p_cache, const char *p_data, uint32_t data_len);

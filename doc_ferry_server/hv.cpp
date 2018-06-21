@@ -21,6 +21,9 @@ void vc::HV::clear()
 	this->vlen = 0;
 	this->head_complete = false;
 	this->value_complete = false;
+	if (this->to == TO_FILE)
+	{
+	}
 }
 
 bool vc::HV::is_value_complete()
@@ -47,11 +50,11 @@ void vc::HV::head_completed()
 		this->header.length = ntohl(this->header.length);
 		if (this->header.length < DEFAULT_MAX_MEMORY_CACHE)
 		{
-			this->to = vc::HV::storage_to_t::TO_MEM;
+			this->to = TO_MEM;
 		}
 		else
 		{
-			this->to = vc::HV::storage_to_t::TO_SHM;
+			this->to = TO_FILE;
 		}
 	}
 }
@@ -109,7 +112,7 @@ int vc::HV::write_value_to_shm(const char *p_data, int data_len)
 
 	if (this->value.get() == nullptr)
 	{
-		this->value = std::shared_ptr<char>((char *)create_cache(NULL, NULL, this->header.length));
+		this->value = std::shared_ptr<char>((char *)create_cache(NULL, this->header.length, TO_FILE));
 		if (this->value.get() == nullptr)
 		{
 			return -1;
@@ -117,13 +120,9 @@ int vc::HV::write_value_to_shm(const char *p_data, int data_len)
 	}
 
 	cache_t *p_cache = (cache_t *)this->value.get();
-	if (p_cache == nullptr)
-	{
-		return -1;
-	}
 
 	wlen = this->header.length - (data_len_t)p_cache->cache_len;
-	if (wlen < (data_len_t)data_len)
+	if (wlen > (data_len_t)data_len)
 	{
 		wlen = (data_len_t)data_len;
 	}
@@ -193,12 +192,13 @@ int vc::HV::write_value(const char *p_data, int data_len)
 	{
 		return 0;
 	}
+
 	switch (this->to)
 	{
-	case vc::HV::storage_to_t::TO_FILE:
-	case vc::HV::storage_to_t::TO_SHM:
+	case TO_FILE:
+	case TO_SHM:
 		return vc::HV::write_value_to_shm(p_data, data_len);
-	case vc::HV::storage_to_t::TO_MEM:
+	case TO_MEM:
 		return vc::HV::write_value_to_mem(p_data, data_len);
 	}
 	return -1;

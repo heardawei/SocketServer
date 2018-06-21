@@ -1,11 +1,12 @@
 #pragma once
 
+#include "cache_part.h"
 #include "interface.h"
 #include <memory>
 
 namespace vc
 {
-#define DEFAULT_MAX_MEMORY_CACHE	((data_len_t)(50 * 1024 * 1024))
+#define DEFAULT_MAX_MEMORY_CACHE	((data_len_t)(1024))
 
 	class HV
 	{
@@ -27,11 +28,7 @@ namespace vc
 		int write_value_to_mem(const char *p_data, int data_len);
 		int write_value(const char *p_data, int data_len);
 
-		enum storage_to_t {
-			TO_MEM,
-			TO_SHM,
-			TO_FILE
-		} to;
+		storage_to to;
 
 		iface::Header			header;
 		std::shared_ptr<char>	value;

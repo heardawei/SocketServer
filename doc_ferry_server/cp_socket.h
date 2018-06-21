@@ -12,7 +12,7 @@
 
 
 #ifdef CP_WINDOWS
-#include <Winsock2.h> 
+#include <Winsock2.h>
 #include <Ws2tcpip.h>
 #include <Mstcpip.h>
 typedef SOCKET			cp_socket_t;
@@ -21,9 +21,9 @@ typedef int				socklen_t;
 #include <unistd.h>
 #include <errno.h>
 #include <sys/socket.h>
-#include <netinet/in.h>  
-#include <sys/socket.h>  
-#include <sys/types.h> 
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <sys/types.h>
 #include <arpa/inet.h>
 typedef int				cp_socket_t;
 #define INVALID_SOCKET	-1

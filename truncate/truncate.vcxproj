@@ -20,9 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{ECB1B77E-7230-4C49-9F42-EB43FF2FD5CB}</ProjectGuid>
+    <ProjectGuid>{E9D9D240-C38F-41DA-98BE-616A345D11ED}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>docferryserver</RootNamespace>
+    <RootNamespace>truncate</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -35,10 +35,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -90,7 +89,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -119,8 +117,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalOptions>/SUBSYSTEM:CONSOLE,”5.01” %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -147,26 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="base_socket.cpp" />
-    <ClCompile Include="cache_part.cpp" />
-    <ClCompile Include="hv.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="cp_socket.cpp" />
-    <ClCompile Include="socket_handler.cpp" />
-    <ClCompile Include="tcp_server.cpp" />
-    <ClCompile Include="virus_handler.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="base_socket.h" />
-    <ClInclude Include="cache_part.h" />
-    <ClInclude Include="HV.h" />
-    <ClInclude Include="chat.h" />
-    <ClInclude Include="cp_socket.h" />
-    <ClInclude Include="debug_print.h" />
-    <ClInclude Include="interface.h" />
-    <ClInclude Include="socket_handler.h" />
-    <ClInclude Include="tcp_server.h" />
-    <ClInclude Include="virus_handler.h" />
+    <ClCompile Include="源.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
