@@ -19,51 +19,84 @@ bool VirusHandler::readable()
 
 bool VirusHandler::writable()
 {
-	return false;
+	return this->resp.size();
+}
+
+void VirusHandler::request(vc::HV &req)
+{
+	// TODO: call virus_database to determin
+	req.clear();
+}
+
+void VirusHandler::response(vc::HV &req, iface::State state)
+{
+	iface::Header header = { req.header.id, sizeof(iface::State) };
+	vc::HV resp;
+	resp.write(&header, (char *)&state);
+
+	this->resp.push(resp);
 }
 
 void VirusHandler::handle_read()
 {
-	char buf[4096];
+	char buf[65535];
 
-	int retv = cp_recv(this->sock, buf, sizeof(buf), 0);
-	if (retv == 0)
+	int nread = this->recv(buf, sizeof(buf));
+	if (nread == 0)
 	{
-		this->handle_close();
 		return;
 	}
-	else if (retv == SOCKET_ERROR)
+	else if (nread == SOCKET_ERROR)
 	{
-		this->handle_expt();
 		return;
 	}
 
-	debug_print("read from [%s:%d] [%dB]\n", this->addr.first.data(), this->addr.second, retv);
+	debug_print("read from [%s:%d] [%dB]\n", this->addr.first.data(), this->addr.second, nread);
 
-	vc::VirusCheck::State ret = this->on_packet(buf, retv);
-
-	if (this->resps.size())
+	char *p_buf = buf;
+	while (true)
 	{
-		vc::Response rsp = this->resps.front();
-		this->resps.pop();
+		int wlen = this->req.write(p_buf, nread);
+		if (wlen == -1)
+		{
+			/* prepare response */
+			this->req.clear();
+			this->state = iface::INTERNAL_ERROR;
+			this->response(this->req, iface::INTERNAL_ERROR);
+			return;
+		}
 
-		int n_send = cp_send(this->sock, (char *)&rsp.header, (int)sizeof(rsp.header), 0);
-		debug_print("send to   [%s:%d] [%dB]\n", this->addr.first.data(), this->addr.second, n_send);
-		cp_send(this->sock, (char *)&rsp.errcode, (int)sizeof(rsp.errcode), 0);
-		debug_print("send to   [%s:%d] [%dB]\n", this->addr.first.data(), this->addr.second, n_send);
-	}
+		p_buf += wlen;
+		nread -= wlen;
 
-	if (ret == vc::VirusCheck::State::ERR)
-	{
-		this->handle_error();
-		return;
+		/* a request is complete */
+		if (this->req.is_complete())
+		{
+			/* prepare response */
+			this->request(this->req);
+			this->state = iface::OK;
+			this->response(this->req, iface::OK);
+		}
+
+		if (nread == 0)
+		{
+			break;
+		}
 	}
-	return;
 }
 
 void VirusHandler::handle_write()
 {
-	debug_print("warning: please set writable to false!\n");
+	while (this->resp.size())
+	{
+		vc::HV resp = this->resp.front();
+		this->resp.pop();
+
+		this->send((char *)&resp.header, sizeof(resp.header));
+		this->send(resp.value.get(), ntohl(resp.header.length));
+		debug_print("%s send id:%d, vlen:%d, errno:%d\n", 
+			__func__, ntohl(resp.header.id), ntohl(resp.header.length), ntohl(*(iface::State *)resp.value.get()));
+	}
 }
 
 void VirusHandler::handle_expt()

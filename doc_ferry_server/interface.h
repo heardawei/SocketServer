@@ -18,7 +18,7 @@ typedef struct
 #pragma pack(pop)
 
 
-enum ServerState
+enum State
 {
 	OK = 0,
 	DATA_ERROR,

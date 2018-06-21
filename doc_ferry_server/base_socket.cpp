@@ -297,7 +297,7 @@ int BaseSocket::recv(char *buf, size_t size)
 	}
 	else if (ret == SOCKET_ERROR)
 	{
-		this->handle_close();
+		this->handle_expt();
 	}
 	return ret;
 }
@@ -393,38 +393,38 @@ void BaseSocket::handle_expt_event()
 void BaseSocket::handle_error()
 {
 	// TODO, print err msg
+	this->log_warning("unhandled error\n");
 	this->handle_close();
 }
 
 void BaseSocket::handle_expt()
 {
-	this->log_warning("unhandled incoming priority event\n");
-	this->handle_close();
+	this->log_warning("unhandled exception\n");
 }
 
 void BaseSocket::handle_read()
 {
-	this->log_warning("unhandled read event\n");
+	this->log_warning("unhandled read\n");
 }
 
 void BaseSocket::handle_write()
 {
-	this->log_warning("unhandled write event\n");
+	this->log_warning("unhandled write\n");
 }
 
 void BaseSocket::handle_connect()
 {
-	this->log_warning("unhandled connect event\n");
+	this->log_warning("unhandled connect\n");
 }
 
 void BaseSocket::handle_accept()
 {
-	this->log_warning("unhandled accept event\n");
+	this->log_warning("unhandled accept\n");
 }
 
 void BaseSocket::handle_close()
 {
-	this->log_warning("unhandled close event\n");
+	this->log_warning("unhandled close\n");
 	this->close();
 }
 

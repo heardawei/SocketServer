@@ -26,15 +26,13 @@ void SocketHandler::handle_read()
 {
 	char buf[4096];
 
-	int retv = cp_recv(this->sock, buf, sizeof(buf), 0);
+	int retv = this->recv(buf, sizeof(buf));
 	if (retv == 0)
 	{
-		this->handle_close();
 		return;
 	}
 	else if (retv == -1)
 	{
-		this->handle_expt();
 		return;
 	}
 

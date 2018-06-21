@@ -150,7 +150,8 @@
     <ClCompile Include="base_socket.cpp" />
     <ClCompile Include="cache_part.cpp" />
     <ClCompile Include="header_value.cpp" />
-    <ClCompile Include="virus_check.cpp" />
+    <ClCompile Include="hv.cpp" />
+    <ClCompile Include="chat.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="cp_socket.cpp" />
     <ClCompile Include="socket_handler.cpp" />
@@ -160,7 +161,8 @@
   <ItemGroup>
     <ClInclude Include="base_socket.h" />
     <ClInclude Include="cache_part.h" />
-    <ClInclude Include="virus_check.h" />
+    <ClInclude Include="HV.h" />
+    <ClInclude Include="chat.h" />
     <ClInclude Include="cp_socket.h" />
     <ClInclude Include="debug_print.h" />
     <ClInclude Include="header_value.h" />
