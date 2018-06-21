@@ -149,7 +149,6 @@
   <ItemGroup>
     <ClCompile Include="base_socket.cpp" />
     <ClCompile Include="cache_part.cpp" />
-    <ClCompile Include="header_value.cpp" />
     <ClCompile Include="hv.cpp" />
     <ClCompile Include="chat.cpp" />
     <ClCompile Include="main.cpp" />
@@ -165,7 +164,6 @@
     <ClInclude Include="chat.h" />
     <ClInclude Include="cp_socket.h" />
     <ClInclude Include="debug_print.h" />
-    <ClInclude Include="header_value.h" />
     <ClInclude Include="interface.h" />
     <ClInclude Include="socket_handler.h" />
     <ClInclude Include="tcp_server.h" />

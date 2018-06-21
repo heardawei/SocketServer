@@ -33,9 +33,6 @@
     <ClCompile Include="virus_handler.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="header_value.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="cache_part.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -66,9 +63,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="virus_handler.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="header_value.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="cache_part.h">
