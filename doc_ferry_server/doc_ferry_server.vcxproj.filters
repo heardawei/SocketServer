@@ -39,7 +39,7 @@
     <ClCompile Include="header_value.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="cache_part.c">
+    <ClCompile Include="cache_part.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

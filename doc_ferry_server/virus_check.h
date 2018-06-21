@@ -20,7 +20,7 @@ namespace vc
 
 		VirusCheck();
 		~VirusCheck();
-		int on_packet(const char *p_data, int data_len);
+		vc::VirusCheck::State on_packet(const char *p_data, int data_len);
 	protected:
 
 		bool req_head_valid;

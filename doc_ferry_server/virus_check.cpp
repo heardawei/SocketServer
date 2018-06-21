@@ -20,7 +20,7 @@ vc::VirusCheck::~VirusCheck()
 
 }
 
-int vc::VirusCheck::on_packet(const char *p_data, int data_len)
+vc::VirusCheck::State vc::VirusCheck::on_packet(const char *p_data, int data_len)
 {
 	debug_print("%s %dB\n", __func__, data_len);
 	int wlen = 0;

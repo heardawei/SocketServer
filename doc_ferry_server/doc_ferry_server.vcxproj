@@ -148,7 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="base_socket.cpp" />
-    <ClCompile Include="cache_part.c" />
+    <ClCompile Include="cache_part.cpp" />
     <ClCompile Include="header_value.cpp" />
     <ClCompile Include="virus_check.cpp" />
     <ClCompile Include="main.cpp" />

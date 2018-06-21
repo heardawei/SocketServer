@@ -40,7 +40,7 @@ void VirusHandler::handle_read()
 
 	debug_print("read from [%s:%d] [%dB]\n", this->addr.first.data(), this->addr.second, retv);
 
-	this->on_packet(buf, retv);
+	vc::VirusCheck::State ret = this->on_packet(buf, retv);
 
 	if (this->resps.size())
 	{
@@ -53,6 +53,11 @@ void VirusHandler::handle_read()
 		debug_print("send to   [%s:%d] [%dB]\n", this->addr.first.data(), this->addr.second, n_send);
 	}
 
+	if (ret == vc::VirusCheck::State::ERR)
+	{
+		this->handle_error();
+		return;
+	}
 	return;
 }
 
@@ -64,6 +69,12 @@ void VirusHandler::handle_write()
 void VirusHandler::handle_expt()
 {
 	debug_print("warning: an exception occured, errcode(%d)\n", errno);
+	this->handle_close();
+}
+
+void VirusHandler::handle_error()
+{
+	debug_print("warning: an error occured\n");
 	this->handle_close();
 }
 

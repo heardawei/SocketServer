@@ -89,7 +89,7 @@ static int HV_write_head(vc::Request *req, const char *p_data, int data_len)
 static int HV_write_value_to_shm(vc::Request *req, const char *p_data, int data_len)
 {
 	data_len_t wlen = 0;
-#if 0
+#if 1
 	if (p_data == nullptr || data_len <= 0)
 	{
 		return 0;

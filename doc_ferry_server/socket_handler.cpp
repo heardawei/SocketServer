@@ -59,6 +59,11 @@ void SocketHandler::handle_expt()
 	this->handle_close();
 }
 
+void SocketHandler::handle_error()
+{
+	this->handle_close();
+}
+
 void SocketHandler::handle_close()
 {
 	this->close();
