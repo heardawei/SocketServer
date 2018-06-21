@@ -15,9 +15,9 @@
 
 struct private_cache
 {
-    uint64_t    packet_len;
-    
+    uint64_t    capacity;
     char        *buf;
+
     FILE        *wfp;
     char        dir[MAX_PATH];
 };
@@ -46,7 +46,7 @@ static int gettimeofday(struct timeval *tp, void *tzp)
 }
 #endif
 
-cache_t *create_cache(char *cache_buf, const char *cache_dir, uint64_t packet_len)
+cache_t *create_cache(char *cache_buf, const char *cache_dir, uint64_t capacity)
 {
     cache_t *p_cache = (cache_t*)calloc(1, sizeof(cache_t));
 
@@ -54,7 +54,7 @@ cache_t *create_cache(char *cache_buf, const char *cache_dir, uint64_t packet_le
     {
         p_cache->p_priv = (private_cache_t*)calloc(1, sizeof(private_cache_t));
 
-        p_cache->p_priv->packet_len = packet_len;
+        p_cache->p_priv->capacity = capacity;
         p_cache->p_priv->buf = cache_buf;
 
         if (NULL == p_cache->p_priv->buf) {
@@ -63,7 +63,7 @@ cache_t *create_cache(char *cache_buf, const char *cache_dir, uint64_t packet_le
         }
         if (cache_dir)
         {
-            size_t dir_len = strlen(cache_dir);
+            size_t dir_len = strlen(cache_dir) - 1;
             
             if('/' == cache_dir[dir_len] || '\\' == cache_dir[dir_len]) {
                 strncpy(p_cache->p_priv->dir, cache_dir, strlen(cache_dir));
@@ -115,20 +115,25 @@ int cache_recv_data(cache_t *p_cache, const char *p_data, uint32_t data_len)
     int result = -1;
     /* create cache file only for the first time */
     if (NULL == p_cache->p_priv->wfp 
-        && p_cache->p_priv->packet_len > MEMORY_CACHE_LEN)
+        && p_cache->p_priv->capacity > MEMORY_CACHE_LEN)
     {
         if (0 != create_cache_file(p_cache)) {
             goto cache_end;
         }
     }
     /* cache to memory */
-    if (p_cache->p_priv->packet_len <= MEMORY_CACHE_LEN)
+    if (p_cache->p_priv->capacity <= MEMORY_CACHE_LEN)
     {
-        memcpy(p_cache->p_priv->buf + p_cache->cache_len, p_data, data_len);
+		uint64_t wlen = p_cache->p_priv->capacity - p_cache->cache_len;
+		if (wlen > data_len)
+		{
+			wlen = data_len;
+		}
+        memcpy(p_cache->p_priv->buf + p_cache->cache_len, p_data, (size_t)wlen);
 
-        p_cache->cache_len += data_len;
+        p_cache->cache_len += wlen;
 
-        if  (p_cache->cache_len >= p_cache->p_priv->packet_len) 
+        if  (p_cache->cache_len == p_cache->p_priv->capacity) 
         {
             result = 0;
             goto cache_end;
@@ -140,7 +145,7 @@ int cache_recv_data(cache_t *p_cache, const char *p_data, uint32_t data_len)
     {
         p_cache->cache_len += (uint64_t)fwrite(p_data, 1, data_len, p_cache->p_priv->wfp);
 
-        if (p_cache->cache_len >= p_cache->p_priv->packet_len) 
+        if (p_cache->cache_len >= p_cache->p_priv->capacity) 
         {
             fclose(p_cache->p_priv->wfp);
             p_cache->p_priv->wfp = NULL;

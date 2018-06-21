@@ -1,32 +1,26 @@
 #include "virus_handler.h"
 #include "debug_print.h"
 
-
-
 VirusHandler::VirusHandler(cp_socket_t sock, ss_map_t *p_handlers) :
 	SocketHandler(sock, p_handlers)
 {
 	debug_print("new client: %s:%d\n", this->addr.first.data(), this->addr.second);
 }
 
-
 VirusHandler::~VirusHandler()
 {
 	debug_print("del client: %s:%d\n", this->addr.first.data(), this->addr.second);
 }
-
 
 bool VirusHandler::readable()
 {
 	return cp_socket_valid(this->socket());
 }
 
-
 bool VirusHandler::writable()
 {
 	return false;
 }
-
 
 void VirusHandler::handle_read()
 {
@@ -38,7 +32,7 @@ void VirusHandler::handle_read()
 		this->handle_close();
 		return;
 	}
-	else if (retv == -1)
+	else if (retv == SOCKET_ERROR)
 	{
 		this->handle_expt();
 		return;
@@ -60,4 +54,21 @@ void VirusHandler::handle_read()
 	}
 
 	return;
+}
+
+void VirusHandler::handle_write()
+{
+	debug_print("warning: please set writable to false!\n");
+}
+
+void VirusHandler::handle_expt()
+{
+	debug_print("warning: an exception occured, errcode(%d)\n", errno);
+	this->handle_close();
+}
+
+void VirusHandler::handle_close()
+{
+	debug_print("debug: handle_close normally\n");
+	this->close();
 }

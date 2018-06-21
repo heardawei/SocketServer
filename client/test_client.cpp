@@ -177,60 +177,81 @@ int fake_client_send_file(int argc, const char **argv)
 	}
 
 	// send header
-	req.header.id = htonl(9999);
+	req.header.id = htonl(123456);
+	req.header.length = htonl(req.header.length);
 	n_send = send(sclient, (const char *)&req.header, (int)sizeof(req.header), 0);
 	if (n_send == SOCKET_ERROR)
 	{
-		printf("recv occur an error send:%d\n", n_send);
+		printf("send header send occur an error send:%d\n", n_send);
 		goto loop_send_recv_end;
 	}
 	else if (n_send == 0)
 	{
-		printf("recv occur an error send:%d\n", n_send);
+		printf("send header send occur an error send:%d\n", n_send);
 		goto loop_send_recv_end;
 	}
-	printf("send head %dB, id=%d, vlen=%d\n", n_send, req.header.id, req.header.length);
 
 	// send buffer
-	n_send = send(sclient, (const char *)req.data.get(), (int)req.header.length, 0);
+	n_send = send(sclient, (const char *)req.data.get(), (int)ntohl(req.header.length), 0);
 	if (n_send == SOCKET_ERROR)
 	{
-		printf("recv occur an error send:%d\n", n_send);
+		printf("send value send occur an error send:%d\n", n_send);
 		goto loop_send_recv_end;
 	}
 	else if (n_send == 0)
 	{
-		printf("recv occur an error send:%d\n", n_send);
+		printf("send value send occur an error send:%d\n", n_send);
 		goto loop_send_recv_end;
 	}
-	printf("send %dB \n", n_send);
+	printf("send head %dB, id=%d, vlen=%d\n",
+		n_send, ntohl(req.header.id), ntohl(req.header.length));
 
 	// wait peer response
-	Sleep(100);
+	Sleep(500);
 
-	// recv response
-	n_recv = recv(sclient, (char *)&resp, sizeof(resp), 0);
+	// recv header
+	n_recv = recv(sclient, (char *)&resp.header, sizeof(resp.header), 0);
 	if (n_recv == SOCKET_ERROR)
 	{
-		printf("recv occur an error recv:%d\n", n_recv);
+		printf("recv header occur an error recv:%d\n", n_recv);
 		goto loop_send_recv_end;
 	}
 	else if (n_recv == 0)
 	{
-		printf("this socket(%d) is normally closed\n", n_recv);
+		printf("recv header this socket(%d) is normally closed\n", n_recv);
 		goto loop_send_recv_end;
 	}
-	if (n_recv != sizeof(resp))
+	if (n_recv != sizeof(resp.header))
 	{
-		printf("recv occur an error recv:%d/%dB\n", n_recv, (int)sizeof(resp));
+		printf("recv header recv occur an error recv:%d/%dB\n", n_recv, (int)sizeof(resp.header));
 		goto loop_send_recv_end;
 	}
-	resp.header.id = ntohl(resp.header.id);
-	resp.header.length = ntohl(resp.header.length);
-	resp.errcode = ntohl(resp.errcode);
-	printf("recv: id:%d,vlen:%d,errcode:%d\n", resp.header.id, resp.header.length, resp.errcode);
+
+	// recv value
+	n_recv = recv(sclient, (char *)&resp.errcode, sizeof(resp.errcode), 0);
+	if (n_recv == SOCKET_ERROR)
+	{
+		printf("recv value occur an error recv:%d\n", n_recv);
+		goto loop_send_recv_end;
+	}
+	else if (n_recv == 0)
+	{
+		printf("recv value this socket(%d) is normally closed\n", n_recv);
+		goto loop_send_recv_end;
+	}
+	if (n_recv != sizeof(resp.errcode))
+	{
+		printf("recv value recv occur an error recv:%d/%dB\n", n_recv, (int)sizeof(resp.errcode));
+		goto loop_send_recv_end;
+	}
+
+	printf("recv: id:%d,vlen:%d,errcode:%d\n", 
+		ntohl(resp.header.id), ntohl(resp.header.length), ntohl(resp.errcode));
 
 loop_send_recv_end:
+
+	printf("error code:%d\n", WSAGetLastError());
+
 	is.close();
 	closesocket(sclient);
 
