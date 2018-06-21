@@ -21,8 +21,14 @@ void vc::HV::clear()
 	this->vlen = 0;
 	this->head_complete = false;
 	this->value_complete = false;
-	if (this->to == TO_FILE)
+	if (this->to == TO_FILE || this->to == TO_SHM)
 	{
+		cache_t *p_cache = (cache_t *)this->value.get();
+		if (p_cache)
+		{
+			leave_cache(p_cache);
+			this->value = std::shared_ptr<char>();
+		}
 	}
 }
 
