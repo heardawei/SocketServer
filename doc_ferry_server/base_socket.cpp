@@ -197,7 +197,7 @@ int BaseSocket::connect(ss_addr_t addr, int af)
 		// TODO raise
 	}
 #elif CP_LINUX
-	if (errcode == EISCONN)
+	if (errno == EISCONN)
 	{
 		this->addr = addr;
 		this->handle_connect_event();

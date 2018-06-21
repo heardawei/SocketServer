@@ -1,11 +1,36 @@
-#include <stdio.h>
+#ifdef _WIN32
+
 #include <winsock2.h>
 #include <WS2tcpip.h>
+#pragma comment(lib, "ws2_32.lib")
+
+#elif __linux__
+
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <arpa/inet.h>
+#include <errno.h>
+#define WSAGetLastError() errno
+#define SOCKET int
+#define SOCKET_ERROR -1
+#define INVALID_SOCKET -1
+
+#else
+
+#error "do not support this OS"
+
+#endif
+
+#include <inttypes.h>
+
+#include <cstdio>
+#include <memory>
+#include <string>
 #include <iostream>
 #include <fstream>
 #include <cstring>
-#include <string>
-#pragma comment(lib, "ws2_32.lib")
 
 using namespace std;
 
@@ -33,6 +58,19 @@ typedef struct
 }Response;
 #pragma pack(pop)
 
+#ifdef __linux__
+
+void Sleep(int time_ms)
+{
+	usleep(time_ms * 1000);
+}
+
+int closesocket(int sock)
+{
+	return close(sock);
+}
+
+#endif
 
 int loop_send_recv(int argc, const char **argv)
 {
@@ -55,7 +93,11 @@ int loop_send_recv(int argc, const char **argv)
 		sockaddr_in serAddr;
 		serAddr.sin_family = AF_INET;
 		serAddr.sin_port = htons(srv_port);
+#ifdef _WIN32
 		inet_pton(AF_INET, srv_host, (void *)&serAddr.sin_addr.S_un.S_addr);
+#elif __linux__
+		inet_pton(AF_INET, srv_host, (void *)&serAddr.sin_addr);
+#endif
 
 		// connect
 		if (connect(sclient, (sockaddr *)&serAddr, sizeof(serAddr)) == SOCKET_ERROR)
@@ -145,7 +187,13 @@ int fake_client_send_file(int argc, const char **argv)
 	sockaddr_in serAddr;
 	serAddr.sin_family = AF_INET;
 	serAddr.sin_port = htons(srv_port);
-	inet_pton(AF_INET, srv_host, (void *)&serAddr.sin_addr.S_un.S_addr);
+
+#ifdef _WIN32
+		inet_pton(AF_INET, srv_host, (void *)&serAddr.sin_addr.S_un.S_addr);
+#elif __linux__
+		inet_pton(AF_INET, srv_host, (void *)&serAddr.sin_addr);
+#endif
+	// inet_pton(AF_INET, srv_host, (void *)&serAddr.sin_addr.S_un.S_addr);
 
 	// connect
 	if (connect(sclient, (sockaddr *)&serAddr, sizeof(serAddr)) == SOCKET_ERROR)
@@ -263,16 +311,20 @@ loop_send_recv_end:
 
 int main(int argc, const char **argv)
 {
+#ifdef _WIN32
 	WORD sockVersion = MAKEWORD(2, 2);
 	WSADATA setup_data;
 	if (WSAStartup(sockVersion, &setup_data) != 0)
 	{
 		return 0;
 	}
+#endif
 
 //	loop_send_recv(argc, argv);
 	fake_client_send_file(argc, argv);
 
+#ifdef _WIN32
 	WSACleanup();
+#endif
 	return 0;
 }

@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include "HV.h"
 #include "debug_print.h"
 #include "cp_socket.h" // htonl

@@ -27,7 +27,7 @@ void TCPServerImpl::handle_accept()
 	{
 #ifdef CP_WINDOWS
 		debug_print("accept new client failed, errcode: %d\n", WSAGetLastError());
-#else CP_LINUX
+#elif CP_LINUX
 		debug_print("accept new client failed, errcode: %d\n", errno);
 #endif /* CP_WINDOWS/CP_LINUX */
 	}
