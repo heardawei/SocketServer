@@ -25,6 +25,7 @@ void vc::HV::clear()
 	{
 		if (this->value)
 		{
+//			delete_cache(this->value);
 			leave_cache(this->value);
 			this->value = NULL;
 		}
@@ -125,20 +126,14 @@ int vc::HV::write_value(const char *p_data, int data_len)
 
 	cache_t *p_cache = (cache_t *)this->value;
 
-	wlen = this->header.length - (data_len_t)p_cache->cache_len;
-	if (wlen > (data_len_t)data_len)
-	{
-		wlen = (data_len_t)data_len;
-	}
-
-	int ret = cache_push(p_cache, p_data, data_len);
-	if (ret == 0)
-	{
-		vc::HV::value_completed();
-	}
-	else if (ret == -1)
+	wlen = cache_push(p_cache, p_data, data_len);
+	if (wlen == -1)
 	{
 		return -1;
+	}
+	else if (cache_full(p_cache))
+	{
+		vc::HV::value_completed();
 	}
 	return wlen;
 }
@@ -189,11 +184,13 @@ int vc::HV::write(iface::Header *header, char *value)
 		{
 			return -1;
 		}
-		if (cache_push(this->value, value, header->length))
+		size_t nwrite = cache_push(this->value, value, header->length);
+		if (nwrite != header->length)
 		{
 			delete_cache(this->value);
 			leave_cache(this->value);
 			this->value = nullptr;
+			fprintf(stderr, "cache_push %dB, expect %dB, error.", (int)nwrite, (int)header->length);
 			return -1;
 		}
 	}

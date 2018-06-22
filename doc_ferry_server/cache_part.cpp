@@ -16,7 +16,9 @@
 struct private_cache
 {
 	size_t	capacity;
+	size_t	widx;
 	size_t	ridx;
+
 	FILE	*wfp;
 	char	dir[MAX_PATH];
 };
@@ -149,6 +151,11 @@ void leave_cache(cache_t *p_cache)
 {
 	if (p_cache) {
 		if (p_cache->p_priv) {
+			if (p_cache->p_priv->wfp)
+			{
+				fclose(p_cache->p_priv->wfp);
+				p_cache->p_priv->wfp = NULL;
+			}
 			free(p_cache->p_priv);
 		}
 		free(p_cache);
@@ -158,65 +165,54 @@ void leave_cache(cache_t *p_cache)
 size_t cache_pop(cache_t *p_cache, char *p_data, size_t data_len)
 {
 	size_t rlen = 0;
+	rlen = p_cache->p_priv->widx - p_cache->p_priv->ridx;
+	if (rlen > data_len)
+	{
+		rlen = data_len;
+	}
+
 	if (p_cache->buf)
 	{
-		rlen = p_cache->p_priv->capacity - p_cache->p_priv->ridx;
-		if (rlen > data_len)
-		{
-			rlen = data_len;
-		}
 		memcpy(p_data, p_cache->buf + p_cache->p_priv->ridx, rlen);
-		p_cache->p_priv->ridx += rlen;
-		return rlen;
 	}
 	else if (p_cache->p_priv->wfp)
 	{
-		rlen = fread(p_data, sizeof(char), data_len, p_cache->p_priv->wfp);
-		rlen *= sizeof(char);
+		rlen = fread(p_data, 1, rlen, p_cache->p_priv->wfp);
 	}
+	else
+	{
+		return -1;
+	}
+	p_cache->p_priv->ridx += rlen;
+
 	return rlen;
 }
 
 /* return:  finish 0    unfinished 1    fail -1 */
 int cache_push(cache_t *p_cache, const char *p_data, uint32_t data_len)
 {
-	int result = -1;
+	size_t wlen = p_cache->p_priv->capacity - p_cache->p_priv->widx;
+	if (wlen > data_len)
+	{
+		wlen = data_len;
+	}
 
-	/* cache to memory */
 	if (p_cache->buf)
 	{
-		size_t wlen = p_cache->p_priv->capacity - p_cache->cache_len;
-		if (wlen > data_len)
-		{
-			wlen = data_len;
-		}
-		memcpy(p_cache->buf + p_cache->cache_len, p_data, (size_t)wlen);
-
-		p_cache->cache_len += wlen;
-
-		if  (p_cache->cache_len >= p_cache->p_priv->capacity) 
-		{
-			result = 0;
-			goto cache_end;
-		}
-		return 1;
+		memcpy(p_cache->buf + p_cache->p_priv->widx, p_data, (size_t)wlen);
 	}
-	/* cache to file */
 	else if(p_cache->p_priv->wfp)
 	{
-		p_cache->cache_len += (size_t)fwrite(p_data, 1, data_len, p_cache->p_priv->wfp);
-
-		if (p_cache->cache_len >= p_cache->p_priv->capacity) 
-		{
-			fclose(p_cache->p_priv->wfp);
-			p_cache->p_priv->wfp = NULL;
-			result = 0;
-			goto cache_end;
-		}
-		return 1;
+		wlen = fwrite(p_data, 1, wlen, p_cache->p_priv->wfp);
 	}
-cache_end:
-	return result;
+	else
+	{
+		return -1;
+	}
+
+	p_cache->p_priv->widx += wlen;
+
+	return wlen;
 }
 
 void delete_cache(cache_t *p_cache)
@@ -238,4 +234,13 @@ void delete_cache(cache_t *p_cache)
 			remove(p_cache->path);
 		}
 	}
+}
+
+bool cache_full(cache_t *p_cache)
+{
+	if (p_cache)
+	{
+		return p_cache->p_priv->widx == p_cache->p_priv->capacity;
+	}
+	return false;
 }

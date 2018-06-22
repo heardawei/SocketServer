@@ -22,7 +22,6 @@ typedef struct private_cache private_cache_t;
 
 typedef struct 
 {
-    size_t		cache_len;
     char        path[MAX_PATH];
 	char		*buf;
     private_cache_t *p_priv;
@@ -45,5 +44,8 @@ void leave_cache(cache_t *p_cache);
 
 /* delete cache buf/file */
 void delete_cache(cache_t *p_cache);
+
+/* determine if cache full of data */
+bool cache_full(cache_t *p_cache);
 
 #endif /* CACHE_PART_HHH */
