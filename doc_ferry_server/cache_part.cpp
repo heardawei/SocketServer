@@ -91,7 +91,11 @@ static int create_cache_file(cache_t *p_cache)
 		result = 0;
 	}
 	fseek(p_cache->p_priv->wfp, 0, SEEK_SET);
+#ifdef _WIN32
 	printf("open %s ok: %d\n", p_cache->path, _fileno(p_cache->p_priv->wfp));
+#elif __linux__
+	printf("open %s ok: %d\n", p_cache->path, fileno(p_cache->p_priv->wfp));
+#endif
 	return result;
 }
 
