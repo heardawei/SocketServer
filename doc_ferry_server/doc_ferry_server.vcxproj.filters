@@ -15,60 +15,60 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="src\base_socket.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="cp_socket.cpp">
+    <ClCompile Include="src\cache_part.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="socket_handler.cpp">
+    <ClCompile Include="src\cp_socket.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="tcp_server.cpp">
+    <ClCompile Include="src\hv.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="base_socket.cpp">
+    <ClCompile Include="src\main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="virus_handler.cpp">
+    <ClCompile Include="src\socket_handler.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="cache_part.cpp">
+    <ClCompile Include="src\tcp_server.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="hv.cpp">
+    <ClCompile Include="src\virus_handler.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cp_socket.h">
+    <ClInclude Include="inc\base_socket.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="debug_print.h">
+    <ClInclude Include="inc\cache_part.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="socket_handler.h">
+    <ClInclude Include="inc\cp_socket.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="tcp_server.h">
+    <ClInclude Include="inc\chat.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="interface.h">
+    <ClInclude Include="inc\debug_print.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="base_socket.h">
+    <ClInclude Include="inc\HV.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="virus_handler.h">
+    <ClInclude Include="inc\interface.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="cache_part.h">
+    <ClInclude Include="inc\socket_handler.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="HV.h">
+    <ClInclude Include="inc\tcp_server.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="chat.h">
+    <ClInclude Include="inc\virus_handler.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

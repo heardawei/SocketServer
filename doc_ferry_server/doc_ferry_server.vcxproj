@@ -147,26 +147,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="base_socket.cpp" />
-    <ClCompile Include="cache_part.cpp" />
-    <ClCompile Include="hv.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="cp_socket.cpp" />
-    <ClCompile Include="socket_handler.cpp" />
-    <ClCompile Include="tcp_server.cpp" />
-    <ClCompile Include="virus_handler.cpp" />
+    <ClCompile Include="src\base_socket.cpp" />
+    <ClCompile Include="src\cache_part.cpp" />
+    <ClCompile Include="src\hv.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\cp_socket.cpp" />
+    <ClCompile Include="src\socket_handler.cpp" />
+    <ClCompile Include="src\tcp_server.cpp" />
+    <ClCompile Include="src\virus_handler.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="base_socket.h" />
-    <ClInclude Include="cache_part.h" />
-    <ClInclude Include="HV.h" />
-    <ClInclude Include="chat.h" />
-    <ClInclude Include="cp_socket.h" />
-    <ClInclude Include="debug_print.h" />
-    <ClInclude Include="interface.h" />
-    <ClInclude Include="socket_handler.h" />
-    <ClInclude Include="tcp_server.h" />
-    <ClInclude Include="virus_handler.h" />
+    <ClInclude Include="inc\base_socket.h" />
+    <ClInclude Include="inc\cache_part.h" />
+    <ClInclude Include="inc\HV.h" />
+    <ClInclude Include="inc\chat.h" />
+    <ClInclude Include="inc\cp_socket.h" />
+    <ClInclude Include="inc\debug_print.h" />
+    <ClInclude Include="inc\interface.h" />
+    <ClInclude Include="inc\socket_handler.h" />
+    <ClInclude Include="inc\tcp_server.h" />
+    <ClInclude Include="inc\virus_handler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
