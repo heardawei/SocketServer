@@ -23,11 +23,10 @@ void vc::HV::clear()
 	this->value_complete = false;
 	if (this->to == TO_FILE || this->to == TO_SHM)
 	{
-		cache_t *p_cache = (cache_t *)this->value.get();
-		if (p_cache)
+		cache_t **pp_cache = (cache_t **)this->value.get();
+		if (pp_cache && *pp_cache)
 		{
-			leave_cache(p_cache);
-			this->value = std::shared_ptr<char>();
+			leave_cache(*pp_cache);
 		}
 	}
 }
@@ -118,14 +117,23 @@ int vc::HV::write_value_to_shm(const char *p_data, int data_len)
 
 	if (this->value.get() == nullptr)
 	{
-		this->value = std::shared_ptr<char>((char *)create_cache(NULL, this->header.length, TO_FILE));
+		this->value = std::shared_ptr<char>((char *)new cache_t *(nullptr));
 		if (this->value.get() == nullptr)
 		{
 			return -1;
 		}
 	}
 
-	cache_t *p_cache = (cache_t *)this->value.get();
+	if (*(cache_t **)this->value.get() == nullptr)
+	{
+		*(cache_t **)this->value.get() = create_cache(NULL, this->header.length, TO_FILE);
+	}
+
+	cache_t *p_cache = *(cache_t **)this->value.get();
+	if (p_cache == nullptr)
+	{
+		return -1;
+	}
 
 	wlen = this->header.length - (data_len_t)p_cache->cache_len;
 	if (wlen > (data_len_t)data_len)
