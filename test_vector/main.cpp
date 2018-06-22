@@ -6,7 +6,7 @@ static std::vector<std::string> vs;
 
 int main(void)
 {
-	srand(time(NULL));
+	srand((unsigned)time(NULL));
 	for (int i = 0; i < 40; i++)
 	{
 		int r = rand() % 10 + 10;

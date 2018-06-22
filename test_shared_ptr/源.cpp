@@ -23,7 +23,7 @@ public:
 	}
 };
 
-int main(void)
+int main1(void)
 {
 	std::map<int, std::shared_ptr<A>> m;
 	std::cout << "-----------------------" << std::endl;
@@ -34,6 +34,15 @@ int main(void)
 	m[2] = ptr;
 	std::cout << "-----------------------" << std::endl;
 
+	return 0;
+}
+
+int main(int argc, const char **argv)
+{
+	std::cout << "-----------------------" << std::endl;
+	main1();
+	std::cout << "-----------------------" << std::endl;
 	getchar();
+
 	return 0;
 }

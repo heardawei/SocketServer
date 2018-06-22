@@ -18,7 +18,7 @@ public:
 protected:
 	
 	char *send_buf;
-	uint64_t send_capacity;
+	size_t send_capacity;
 	
 	vc::HV				req;
 	std::queue<vc::HV>	resp;

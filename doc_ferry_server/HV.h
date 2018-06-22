@@ -24,14 +24,12 @@ namespace vc
 		void head_completed();
 		void value_completed();
 		int write_head(const char *p_data, int data_len);
-		int write_value_to_shm(const char *p_data, int data_len);
-		int write_value_to_mem(const char *p_data, int data_len);
 		int write_value(const char *p_data, int data_len);
 
 		storage_to to;
 
 		iface::Header			header;
-		std::shared_ptr<char>	value;
+		cache_t					*value;
 
 		int						hlen;
 		bool					head_complete;

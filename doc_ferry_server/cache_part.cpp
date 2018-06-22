@@ -15,9 +15,10 @@
 
 struct private_cache
 {
-	uint64_t    capacity;
-	FILE        *wfp;
-	char        dir[MAX_PATH];
+	size_t	capacity;
+	size_t	ridx;
+	FILE	*wfp;
+	char	dir[MAX_PATH];
 };
 
 #ifdef _WIN32
@@ -92,7 +93,7 @@ static int create_cache_file(cache_t *p_cache)
 	return result;
 }
 
-cache_t *create_cache(const char *cache_dir, uint64_t capacity, storage_to to)
+cache_t *create_cache(const char *cache_dir, size_t capacity, storage_to to)
 {
 	cache_t *p_cache = (cache_t*)calloc(1, sizeof(cache_t));
 
@@ -154,20 +155,37 @@ void leave_cache(cache_t *p_cache)
 	}
 }
 
+size_t cache_pop(cache_t *p_cache, char *p_data, size_t data_len)
+{
+	size_t rlen = 0;
+	if (p_cache->buf)
+	{
+		rlen = p_cache->p_priv->capacity - p_cache->p_priv->ridx;
+		if (rlen > data_len)
+		{
+			rlen = data_len;
+		}
+		memcpy(p_data, p_cache->buf + p_cache->p_priv->ridx, rlen);
+		p_cache->p_priv->ridx += rlen;
+		return rlen;
+	}
+	else if (p_cache->p_priv->wfp)
+	{
+		rlen = fread(p_data, sizeof(char), data_len, p_cache->p_priv->wfp);
+		rlen *= sizeof(char);
+	}
+	return rlen;
+}
+
 /* return:  finish 0    unfinished 1    fail -1 */
-int cache_recv_data(cache_t *p_cache, const char *p_data, uint32_t data_len)
+int cache_push(cache_t *p_cache, const char *p_data, uint32_t data_len)
 {
 	int result = -1;
-	/* create cache file only for the first time */
-	if (NULL == p_cache->p_priv->wfp 
-		&& p_cache->p_priv->capacity > MEMORY_CACHE_LEN)
-	{
-		goto cache_end;
-	}
+
 	/* cache to memory */
 	if (p_cache->buf)
 	{
-		uint64_t wlen = p_cache->p_priv->capacity - p_cache->cache_len;
+		size_t wlen = p_cache->p_priv->capacity - p_cache->cache_len;
 		if (wlen > data_len)
 		{
 			wlen = data_len;
@@ -186,7 +204,7 @@ int cache_recv_data(cache_t *p_cache, const char *p_data, uint32_t data_len)
 	/* cache to file */
 	else if(p_cache->p_priv->wfp)
 	{
-		p_cache->cache_len += (uint64_t)fwrite(p_data, 1, data_len, p_cache->p_priv->wfp);
+		p_cache->cache_len += (size_t)fwrite(p_data, 1, data_len, p_cache->p_priv->wfp);
 
 		if (p_cache->cache_len >= p_cache->p_priv->capacity) 
 		{
@@ -201,3 +219,23 @@ cache_end:
 	return result;
 }
 
+void delete_cache(cache_t *p_cache)
+{
+	if (p_cache)
+	{
+		if (p_cache->buf)
+		{
+			free(p_cache->buf);
+			p_cache->buf = NULL;
+		}
+		else if (p_cache->path[0])
+		{
+			if (p_cache->p_priv->wfp)
+			{
+				fclose(p_cache->p_priv->wfp);
+				p_cache->p_priv->wfp = NULL;
+			}
+			remove(p_cache->path);
+		}
+	}
+}
