@@ -6,7 +6,7 @@
 #include "cache_part.h"
 
 vc::HV::HV() :
-	hlen(0), head_complete(false), vlen(0), value_complete(false)
+	value(nullptr), hlen(0), head_complete(false), vlen(0), value_complete(false)
 {
 
 }
