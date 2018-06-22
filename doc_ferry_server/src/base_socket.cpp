@@ -110,7 +110,7 @@ BaseSocket::BaseSocket(cp_socket_t sock, ss_map_t *p_handlers) :
 			}
 #elif CP_LINUX
 			debug_print("sock:%d getpeername failed, errcode:%d\n", sock, errno);
-			if (errno = EINVAL || ENOTCONN)
+			if (errno == EINVAL || errno == ENOTCONN)
 			{
 				this->connected = false;
 			}
@@ -440,7 +440,7 @@ static void do_select(int timeout_ms, ss_map_t *p_handlers)
 
 	struct timeval tv;
 
-	debug_print("total handlers:%d\n", p_handlers->size());
+	debug_print("total handlers:%d\n", (int)p_handlers->size());
 
 	if (p_handlers->size() == 0)
 	{
@@ -582,12 +582,6 @@ static void do_select(int timeout_ms, ss_map_t *p_handlers)
 
 void loop(int timeout_ms, size_t count, ss_map_t *p_handlers)
 {
-	bool no_stop = false;
-	if (count == 0)
-	{
-		no_stop = true;
-	}
-
 	if (p_handlers == nullptr)
 	{
 		debug_print("use global default map\n");
@@ -615,7 +609,7 @@ void loop(int timeout_ms, size_t count, ss_map_t *p_handlers)
 	{
 		for (size_t i = 0; i < count && p_handlers->size(); i++)
 		{
-			debug_print("loop %d/%d times\n", i, count);
+			debug_print("loop %d/%d times\n", (int)i, (int)count);
 			do_select(timeout_ms, p_handlers);
 		}
 		debug_print("after loop %d times, stop loop\n", (int)count);

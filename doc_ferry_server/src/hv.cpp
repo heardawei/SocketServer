@@ -127,11 +127,7 @@ int vc::HV::write_value(const char *p_data, int data_len)
 	cache_t *p_cache = (cache_t *)this->value;
 
 	wlen = cache_push(p_cache, p_data, data_len);
-	if (wlen == -1)
-	{
-		return -1;
-	}
-	else if (cache_full(p_cache))
+	if (cache_full(p_cache))
 	{
 		vc::HV::value_completed();
 	}
